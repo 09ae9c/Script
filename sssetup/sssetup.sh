@@ -86,4 +86,4 @@ ssserver --manager-address ${ssaddr}":"${ssport} -c ${ssconfpath} -d start
 # setup the firewall for access premission
 # only the specified ip(like mgrip) can access the specified port
 iptables -I INPUT -p udp --dport $ssport -j DROP
-iptables -I INPUT -s $mgrip -p tcp --dport $ssport -j ACCEPT
+iptables -I INPUT -s $mgrip -p udp --dport $ssport -j ACCEPT
