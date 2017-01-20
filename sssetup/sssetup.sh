@@ -11,7 +11,7 @@
 # version 0.0.1
 
 ssconfdir="/etc/shadowsocks"
-ssconfpath="/etc/shadowsocks/ssconf.json"
+ssconf="/etc/shadowsocks/ssconf.json"
 ssaddr="0.0.0.0"
 
 method="aes-256-cfb"
