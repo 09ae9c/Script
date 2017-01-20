@@ -7,7 +7,7 @@
 # then onle the 123.45.67.89 can access the shadowsocks server on the specified port
 # attention! you must run this script as root
 
-# auther classTC<classtc15@gmail.com>
+# author classTC<classtc15@gmail.com>
 # version 0.0.1
 
 ssconfdir="/etc/shadowsocks"
