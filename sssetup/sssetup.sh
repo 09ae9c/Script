@@ -5,13 +5,13 @@
 # e.x
 # if the manager server ip is 123.45.67.89 and run this script on shadowsocks server(e.x 65.4.32.1)
 # then onle the 123.45.67.89 can access the shadowsocks server on the specified port
-# attention! you must run this script as root
+# attention please! you must run this script as root
 
-# author classTC<classtc15@gmail.com>
-# version 0.0.1
+# auther classTC<classtc15@gmail.com>
+
 
 ssconfdir="/etc/shadowsocks"
-ssconf="/etc/shadowsocks/ssconf.json"
+ssconfpath="/etc/shadowsocks/ssconf.json"
 ssaddr="0.0.0.0"
 
 method="aes-256-cfb"
@@ -19,7 +19,7 @@ passlen=8
 ssport=9001
 mgrip="0.0.0.0"
 
-usages="
+usage="
 Run options:\n
   -m METHOD       \t encryption method, default: aes-256-cfb\n
   -l PASSLEN      \t password length, default: 8\n
@@ -28,9 +28,9 @@ Run options:\n
   -h HELP         \t show help\n
 "
 
-while getopts "m:l:p:i:" arg
+while getopts "m:l:p:i:h" arg
 do
-  case $arg in
+  case ${arg} in
        m)
           method=$OPTARG
           ;;
@@ -44,11 +44,11 @@ do
           mgrip=$OPTARG
           ;;
        h)
-          echo -e $usages
+          echo -e ${usage}
           exit 1
           ;;
        ?)
-          echo -e $usages
+          echo -e ${usage}
           exit 1
           ;;
   esac
@@ -63,10 +63,12 @@ function randomPwd(){
     echo $strs
 }
 
-# setup environment
-apt-get update
-apt-get install python-pip
-pip install shadowsocks
+# install shadowsocks
+if [ ! $(ls /usr/local/bin | grep ssserver) ]; then
+    apt-get update
+    apt-get install python-pip
+    pip install shadowsocks
+fi
 
 # create shadowsocks config file in the specified path
 mkdir -p $ssconfdir
@@ -78,7 +80,7 @@ echo "{
     },
     \"timeout\": 300,
     \"method\": \"$method\"
-}" > $ssconfpath
+}" > ${ssconfpath}
 
 # start ssserver
 ssserver --manager-address ${ssaddr}":"${ssport} -c ${ssconfpath} -d start
