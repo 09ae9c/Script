@@ -5,10 +5,9 @@
 # e.x
 # if the manager server ip is 123.45.67.89 and run this script on shadowsocks server(e.x 65.4.32.1)
 # then onle the 123.45.67.89 can access the shadowsocks server on the specified port
-# attention please! you must run this script as root
+# attention! you must run this script as root
 
 # auther classTC<classtc15@gmail.com>
-
 
 ssconfdir="/etc/shadowsocks"
 ssconfpath="/etc/shadowsocks/ssconf.json"
@@ -68,6 +67,8 @@ if [ ! $(ls /usr/local/bin | grep ssserver) ]; then
     apt-get update
     apt-get install python-pip
     pip install shadowsocks
+elif ps -ef | grep ssserver | egrep -v grep > /dev/null; then
+    ssserver -d stop
 fi
 
 # create shadowsocks config file in the specified path
@@ -84,6 +85,14 @@ echo "{
 
 # start ssserver
 ssserver --manager-address ${ssaddr}":"${ssport} -c ${ssconfpath} -d start
+
+# clean
+if ps -ef | grep ssserver | egrep -v grep > /dev/null; then
+    rm /home/sssetup.sh
+fi
+
+# delete all rules
+iptables -F && iptables -X
 
 # setup the firewall for access premission
 # only the specified ip(like mgrip) can access the specified port
