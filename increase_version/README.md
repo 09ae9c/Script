@@ -55,3 +55,5 @@ versionName=1.5.0
 - minor [offset]:       increase minor number, reset reversion number
 
 - reversion  [offset]:  increase reversion number
+
+- help:                 show usages
