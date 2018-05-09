@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+#
+# This script will increase version name and version code for your project
+# you can add this script to some build system for auto increase version
+# 
+# you need add version.properties file in your project root directory, and it's 
+# content should looks like:
+# versionCode=1
+# versionName=1.0.0
+# and then execute script `./increaseVersion`, after works done, content change to:
+# versionCode=2
+# versionName=1.0.1
+#
+# there have some options for you to control how to increase
+#
+# VersionCode: increase auto
+# VersionName: [MajorNumber].[MinorNumber].[RevisionNumber]
+#
+# auther 09AE9C<09ae9c@gmail.com>
+
+currentVersionCode=0
+currentVersionName='0.0.0'
+
+majorNumber=0
+minorNumber=0
+reversionNumber=0
+
+file='version.properties'
+
+# read versionCode and versionName from version.properties file and parse major,minor,reversion number
+function loadVersion(){
+    currentVersionCode=$(sed -n 1p $file | cut -d '=' -f 2)
+    currentVersionName=$(sed -n 2p $file | cut -d '=' -f 2)
+    echo "old versionName: $currentVersionName, versionCode: $currentVersionCode"
+
+    arr=($(echo $currentVersionName | tr '.' ' ' | tr -s ' '))
+
+    major=${arr[0]}
+    minor=${arr[1]}
+    reversion=${arr[2]}
+}
+
+function updateVersion(){
+    currentVersionName="$major.$minor.$reversion"
+    currentVersionCode=$[$currentVersionCode+1]
+    echo "new versionName: $currentVersionName, versionCode: $currentVersionCode"
+
+    echo -e "versionCode=$currentVersionCode\nversionName=$currentVersionName" > $file
+}
+
+function increaseMajor(){
+    loadVersion
+    major=$[$major+$2]
+    minor=0
+    reversion=0
+    updateVersion
+}
+
+function increaseMinor(){
+    loadVersion
+    minor=$[$minor+$2]
+    reversion=0
+    updateVersion
+}
+
+function increaseReversion(){
+    loadVersion
+    reversion=$[$reversion+$2]
+    updateVersion
+}
+
+function help(){
+    echo -e " Usage: \n"\
+            "./increaseVersion [type] [offset]\n\n"\
+            "[type] is an options which you want to increase, reversion is default\n"\
+            "[offset] is how mush you want to increase, 1 is default\n\n"\
+            "Options: \n"\
+            "major [offset]       increase major number, reset minor and reversion number\n"\
+            "minor [offset]       increase minor number, reset reversion number\n"\
+            "reversion  [offset]  increase reversion number\n"
+}
+
+#########################################################
+
+if [ ! -n "$1" ] ;then
+    type='reversion'
+else
+    type=$1
+fi
+
+if [ ! -n "$2" ] ;then
+    offset=1
+else
+    offset=$2
+fi
+
+case $type in
+    (major) increaseMajor $type $offset;;
+    (minor) increaseMinor $type $offset;;
+    (reversion) increaseReversion $type $offset;;
+    (help) help;;
+esac
