@@ -10,4 +10,4 @@
 
 - [ssdaemon](https://github.com/09ae9c/Script/tree/master/ssdaemon): daemon for ssserver progress to keep it alive
 
-- [qvpub](https://github.com/09ae9c/Script/tree/master/qvpub): quick publish specified tag's [Quiver notes](http://happenapps.com/) to your remote blog
+- [qvpub](https://github.com/09ae9c/Script/tree/master/qvpub): quickly publish specified tag's [Quiver notes](http://happenapps.com/) to your remote blog
