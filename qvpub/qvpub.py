@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# public quiver note to Hexo remote blog
+# quickly publish quiver note to Hexo remote blog
 # -p: source quiver library path, should like: Quiver.qvlibrary
 # -t: tag to publish, only publish note which has this tag
 # -o: output path for parsed files
