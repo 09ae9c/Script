@@ -9,8 +9,9 @@
 # author: 09ae9c@gmail.com
 
 import os
+import re
 import json
-import time
+from datetime import datetime
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -57,15 +58,22 @@ def filter_notes(all_notes_path, tag):
 			all_tag_note_path.append(note)
 	return all_tag_note_path
 
-
-# create target filename from meta.json
-# filename format: {timestamp}.md
-def create_filename_from_meta(meta_path):
-	with open(meta_path,'r') as f:
-		meta_json = json.load(f)
-		time_local = time.localtime(int(meta_json['created_at']))
-		return time.strftime('%Y%m%d%H',time_local) + '.md'
-
+# try parse filename from data
+# data format:
+# ---
+# title: xxx
+# date: 2018-04-04 12:12:12
+# categories:
+# - xxx
+# ---
+# we need the datetime in date line, and transfer it to '201804041212.md' as a filename
+def parse_filename_from_datetime(data):
+	try:
+		time_text = re.compile(r'(\d{4}-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2})').search(data).group(0)
+		time_local = datetime.strptime(time_text, '%Y-%m-%d %H:%M:%S')
+		return time_local.strftime('%Y%m%d%H%M') + '.md'
+	except:
+		return None
 
 # read markdown cell from content.json
 # @param file: target content.json file
@@ -75,11 +83,17 @@ def create_filename_from_meta(meta_path):
 def read_cell_from_content(file,type):
 	result = ''
 	content_json = json.load(file)
+	filename = content_json['title'] + '.md'
 	for cell in content_json['cells']:
 		if cell['type'] == type:
 			result += cell['data']
 	
-	return result
+	parsed_filename = parse_filename_from_datetime(result)
+	if parsed_filename != None:
+		print('converting: %s --> %s' %(filename, parsed_filename))
+		filename = parsed_filename
+
+	return [filename,result]
 
 # write notes to specified output path with target type cells
 # @param notes_path: original notes path in Quiver library
@@ -88,9 +102,10 @@ def read_cell_from_content(file,type):
 def write_output(notes_path,output_path,type):
 	for note_path in notes_path:
 		with open(note_path+'/content.json','r') as f:
-			filename = create_filename_from_meta(note_path+'/meta.json')
+			# filename = create_filename_from_meta(note_path+'/meta.json')
+			filename, content = read_cell_from_content(f,type)
 			with open(output_path+'/'+filename, 'w') as wf:
-				wf.write(read_cell_from_content(f,type))		
+				wf.write(content)		
 
 
 def execute_publish_cmd(path,cmd):
@@ -107,6 +122,7 @@ all_library_notes = load_notes(args.p)
 
 # filter notes for specified arg
 filtered_notes = filter_notes(all_library_notes,args.t)
+print('find %d notes with tag %s' % (len(filtered_notes),args.t))
 
 write_output(filtered_notes,args.o,'markdown')
 

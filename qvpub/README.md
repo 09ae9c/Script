@@ -17,7 +17,7 @@ below are required options for script execution
 
 - -c: publish command after output
 
-then execute command `python qvpub.py -p Users/TC/Quiver.qvlibrary -t Blog -o Users/TC/Blog/source/_post -c "hexo g; hexo d"`
+then execute command `python3 qvpub.py -p Users/TC/Quiver.qvlibrary -t Blog -o Users/TC/Blog/source/_post -c "hexo g; hexo d"`
 
 what this command to do is:
 
@@ -33,7 +33,7 @@ cd ~
 vi .bash_profile
 
 # add alias line:
-alias qvpub='python qvpub.py -p /Users/TC/Quiver.qvlibrary -t Blog -o /Users/TC/Blog/source/_post -c "hexo g; hexo d"'
+alias qvpub='python3 qvpub.py -p /Users/TC/Quiver.qvlibrary -t Blog -o /Users/TC/Blog/source/_post -c "hexo g; hexo d"'
 
 # and then refresh:
 source .bash_profile
