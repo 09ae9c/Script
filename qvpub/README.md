@@ -15,6 +15,8 @@ below are required options for script execution
 
 - -o: output path for parsed files
 
+- -u: whether upload image resources to https://sm.ms, 'y' or 'n'
+
 - -c: publish command after output
 
 then execute command `python3 qvpub.py -p Users/TC/Quiver.qvlibrary -t Blog -o Users/TC/Blog/source/_post -c "hexo g; hexo d"`
@@ -24,7 +26,8 @@ what this command to do is:
 1. findout all notes at 'Users/TC/Quiver.qvlibrary'
 2. foreach notes and filter which has tag 'Blog'
 3. parse notes content and rewirte to 'Users/TC/Blog/source/_post'
-4. execute a Hexo command to generate blogs and deploy to remote, see [09ae9c.github.io](https://github.com/09ae9c/09ae9c.github.io) for more infomation about hexo blog
+4. during parse, if -u argument set to 'y', it will upload all image resources to https://sm.ms
+5. execute a Hexo command to generate blogs and deploy to remote, see [09ae9c.github.io](https://github.com/09ae9c/09ae9c.github.io) for more infomation about hexo blog
 
 for convenience, you can add this command to alias, e.g.
 
@@ -33,7 +36,7 @@ cd ~
 vi .bash_profile
 
 # add alias line:
-alias qvpub='python3 qvpub.py -p /Users/TC/Quiver.qvlibrary -t Blog -o /Users/TC/Blog/source/_post -c "hexo g; hexo d"'
+alias qvpub='python3 qvpub.py -p /Users/TC/Quiver.qvlibrary -t Blog -o /Users/TC/Blog/source/_post -u y -c "hexo g; hexo d"'
 
 # and then refresh:
 source .bash_profile
@@ -48,9 +51,7 @@ that's All!
 
 any other blog system you can use, just replace the publish command
 
-# TODO
-
-- add image source replacement
+Thanks https://sm.ms provider the cloud image store service
 
 
 
